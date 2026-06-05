@@ -1,9 +1,9 @@
 const getHealth = (req, res) => {
   // req = request
-  // res = respond
+  // res = response
 
   res.status(200).json({
-    status: "ok",
+    status: 'ok',
     timestamp: new Date().toISOString(),
   });
 };
