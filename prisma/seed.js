@@ -15,11 +15,35 @@ async function main() {
   ]);
   console.log(` ✓ ${categories.length} kategori dibuat`);
 
+  // --- BAGIAN USER YANG SUDAH DIPERBARUI ---
   const users = await Promise.all([
-    prisma.user.create({ data: { name: 'Budi Santoso', email: 'budi@example.com', password: 'hashed_pw_1' } }),
-    prisma.user.create({ data: { name: 'Siti Rahayu', email: 'siti@example.com', password: 'hashed_pw_2' } }),
+    prisma.user.create({
+      data: {
+        name: 'Budi Santoso',
+        email: 'budi@example.com',
+        password: 'hashed_pw_1',
+        role: 'USER',
+      },
+    }),
+    prisma.user.create({
+      data: {
+        name: 'Siti Rahayu',
+        email: 'siti@example.com',
+        password: 'hashed_pw_2',
+        role: 'USER',
+      },
+    }),
+    prisma.user.create({
+      data: {
+        name: 'Admin WAD',
+        email: 'admin@example.com',
+        password: 'hashed_pw_admin', // Disesuaikan polanya dengan user lain
+        role: 'ADMIN',
+      },
+    }),
   ]);
   console.log(` ✓ ${users.length} user dibuat`);
+  // -----------------------------------------
 
   const tasks = await Promise.all([
     prisma.task.create({ data: {
