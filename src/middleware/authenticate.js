@@ -22,9 +22,11 @@ const authenticate = (req, res, next) => {
     const payload = jwt.verify(token, config.jwt.accessSecret);
 
     // 3. Tambahkan informasi user ke request untuk digunakan controller
+    // 3. Tambahkan informasi user ke request untuk digunakan controller
     req.user = {
       userId: payload.userId,
       email: payload.email,
+      role: payload.role, // ← Tambahkan baris ini
     };
 
     next();

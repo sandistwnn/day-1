@@ -83,9 +83,11 @@ const authService = {
     }
 
     // 4. Buat access token (short-lived: 15 menit)
+    // 4. Buat access token (short-lived: 15 menit)
     const accessToken = signAccessToken({
       userId: user.id,
       email: user.email,
+      role: user.role, // ← Tambahkan baris ini
     });
 
     // 5. Buat refresh token (long-lived: 7 hari)
@@ -99,7 +101,7 @@ const authService = {
     });
 
     return {
-      user: { id: user.id, name: user.name, email: user.email },
+      user: { id: user.id, name: user.name, email: user.email, role: user.role },
       accessToken,
       refreshToken,
     };
@@ -146,11 +148,12 @@ const authService = {
     await refreshTokenRepo.revoke(tokenString);
 
     // 6. Buat token baru
+    // 6. Buat token baru
     const newAccessToken = signAccessToken({
       userId: storedToken.userId,
       email: storedToken.user.email,
+      role: storedToken.user.role, // ← Tambahkan baris ini juga agar saat token diperbarui, role tidak hilang
     });
-    const newRefreshToken = signRefreshToken({ userId: storedToken.userId });
 
     // 7. Simpan refresh token baru
     await refreshTokenRepo.create({

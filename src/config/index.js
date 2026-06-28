@@ -1,5 +1,7 @@
 require('dotenv').config();
 
+console.log("DEBUG: Isi process.env.JWT_SECRET adalah:", process.env.JWT_SECRET);
+
 module.exports = {
   port: process.env.PORT || 3000,
   env: process.env.NODE_ENV || 'development',
