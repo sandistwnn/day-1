@@ -1,4 +1,6 @@
 // src/socket.js
+// Di baris paling atas src/socket.js
+console.log("DEBUG: Isi process.env.JWT_SECRET:", process.env.JWT_SECRET);
 const jwt = require("jsonwebtoken");
 const config = require("./config");
 
@@ -14,7 +16,7 @@ module.exports = function setupSocket(io) {
       }
       
       // Ambil secret dengan fallback yang lebih aman
-      const secret = config.jwtAccessSecret || process.env.JWT_SECRET;
+      const secret = process.env.JWT_SECRET || process.env.JWT_ACCESS_SECRET;
 
       // DEBUG: Jika secret kosong, kita beritahu di terminal agar jelas
       if (!secret) {

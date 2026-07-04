@@ -40,12 +40,11 @@ const listTasks = async (req, res, next) => {
 };
 
 // ─── POST /api/v1/tasks ─────────────────────────────────────
+// ─── POST /api/v1/tasks ─────────────────────────────────────
 const createTask = async (req, res, next) => {
   const { title, description, status, priority, dueDate } = req.body;
-  const userId = req.user.userId; // Mengambil ID dari token, bukan body
+  const userId = req.user.userId;
 
-  // Logika Penyelamat:
-  // Memastikan dueDate dikirim sebagai objek Date yang valid atau null
   const formattedDueDate = (dueDate && typeof dueDate === 'string' && dueDate.trim() !== "") 
                             ? new Date(dueDate) 
                             : null;
@@ -56,17 +55,30 @@ const createTask = async (req, res, next) => {
       description,
       status,
       priority,
-      dueDate: formattedDueDate, // Mengirim tanggal yang sudah diformat
+      dueDate: formattedDueDate,
       userId: userId,
     });
 
-    // Mengirim respon sukses
+    // --- TAMBAHKAN INI ---
+    // 1. Ambil instance IO yang sudah diset di app.js
+    const io = req.app.get("io");
+    
+    // 2. Kirim sinyal ke semua orang yang mendengarkan room "tasks:global"
+    if (io) {
+      io.to("tasks:global").emit("task:created", { task });
+      io.to(`user:${userId}`).emit("notification", {
+        type: "SUCCESS",
+        title: "Task Berhasil",
+        message: `Task "${task.title}" telah ditambahkan.`,
+      });
+    }
+    // ---------------------
+
     res.status(201).json({
       status: "success",
       data: task,
     });
   } catch (error) {
-    // Melemparkan error ke middleware error handler agar backend tidak crash
     next(error); 
   }
 };
