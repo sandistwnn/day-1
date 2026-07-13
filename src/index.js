@@ -18,6 +18,7 @@ const adminRoutes = require("./router/admin.routes");
 const setupSwagger = require("./docs/swagger"); // Swagger tetap kita pertahankan
 
 const app = express();
+app.set('trust proxy', 1);
 const server = http.createServer(app); // ← HTTP server membungkus Express
 
 // ── SOCKET.IO SERVER ──────────────────────────────────────

@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
+const argon2 = require('argon2');
 const prisma = new PrismaClient();
 
 async function main() {
@@ -15,35 +16,31 @@ async function main() {
   ]);
   console.log(` ✓ ${categories.length} kategori dibuat`);
 
-  // --- BAGIAN USER YANG SUDAH DIPERBARUI ---
+  const hash = (pw) => argon2.hash(pw, {
+    memoryCost: 65536,
+    timeCost: 3,
+    parallelism: 4,
+  });
+
   const users = await Promise.all([
-    prisma.user.create({
-      data: {
-        name: 'Budi Santoso',
-        email: 'budi@example.com',
-        password: 'hashed_pw_1',
-        role: 'USER',
-      },
-    }),
-    prisma.user.create({
-      data: {
-        name: 'Siti Rahayu',
-        email: 'siti@example.com',
-        password: 'hashed_pw_2',
-        role: 'USER',
-      },
-    }),
     prisma.user.create({
       data: {
         name: 'Admin WAD',
         email: 'admin@example.com',
-        password: 'hashed_pw_admin', // Disesuaikan polanya dengan user lain
+        password: await hash('passwordAdmin'),
         role: 'ADMIN',
+      },
+    }),
+    prisma.user.create({
+      data: {
+        name: 'Test User',
+        email: 'test@example.com',
+        password: await hash('password123'),
+        role: 'USER',
       },
     }),
   ]);
   console.log(` ✓ ${users.length} user dibuat`);
-  // -----------------------------------------
 
   const tasks = await Promise.all([
     prisma.task.create({ data: {

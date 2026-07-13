@@ -1,8 +1,8 @@
 const Joi = require('joi');
 
 // Nilai yang valid untuk field status, priority, sort, dan order
-const VALID_STATUS = ['todo', 'in_progress', 'done'];
-const VALID_PRIORITY = ['low', 'medium', 'high'];
+const VALID_STATUS = ['TODO', 'IN_PROGRESS', 'DONE'];
+const VALID_PRIORITY = ['LOW', 'MEDIUM', 'HIGH'];
 const VALID_SORT = ['createdAt', 'updatedAt', 'title', 'priority'];
 const VALID_ORDER = ['asc', 'desc'];
 
