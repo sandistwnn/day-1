@@ -261,48 +261,13 @@ Entity Relationship Diagram mencakup 4 tabel:
 - `Status`: `TODO`, `IN_PROGRESS`, `DONE`
 - `Priority`: `LOW`, `MEDIUM`, `HIGH`
 
-diagram erd
+### diagram erd
+<img width="552" height="591" alt="diagram erd" src="https://github.com/user-attachments/assets/97f98e0b-a300-4911-bfd9-24a929e67670" />
+
+
 
 
 ---
 
-## Arsitektur Deployment
-Arsitektur deployment yang umum untuk stack ini:
-
-1. Nginx menerima request HTTP/HTTPS dari client.
-2. Nginx meneruskan request ke PM2 yang menjalankan aplikasi Node.js.
-3. Aplikasi Node.js (`src/index.js`) melayani REST API dan Socket.IO.
-4. Aplikasi Node.js terhubung ke PostgreSQL menggunakan variabel `DATABASE_URL`.
-
-### Alur komponen
-- `Nginx` sebagai reverse proxy dan terminator TLS
-- `PM2` sebagai process manager / daemon untuk `node src/index.js`
-- `App` Node.js sebagai server Express + Socket.IO
-- `DB` PostgreSQL sebagai sumber data
-
-### Mermaid arsitektur
-```mermaid
-flowchart LR
-    NGINX[Nginx Reverse Proxy]
-    PM2[PM2 Process Manager]
-    APP[Node.js App\n(src/index.js)]
-    DB[PostgreSQL Database]
-
-    NGINX -->|HTTP/HTTPS + WebSocket Upgrade| PM2
-    PM2 -->|Menjalankan| APP
-    APP -->|DATABASE_URL| DB
-```
-
-### Contoh perintah deploy PM2
-```bash
-npm install
-npm start
-pm2 start npm --name wad-capstone -- start
-```
-
 ---
 
-## Catatan Tambahan
-- Pastikan `ALLOWED_ORIGINS` mencakup origin frontend yang terhubung ke Socket.IO.
-- Socket.IO memerlukan konfigurasi WebSocket upgrade pada Nginx agar event real-time berjalan lancar.
-- Jika health route diinginkan, `src/router/index.js` saat ini belum dipasang ke `src/index.js`.
